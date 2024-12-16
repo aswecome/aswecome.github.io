@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>快樂寫程式</title>
+    <script>
+        let pyodide;
+
+        async function initPyodide() {
+            pyodide = await loadPyodide();
+            console.log("Pyodide is ready!");
+        }
+
+        async function runPythonCode() {
+            if (!pyodide) {
+                document.getElementById("output").innerText = "Pyodide 尚未加載完成，請稍候...";
+                return;
+            }
+
+            // 取得使用者的 Python 代碼
+            let code = document.getElementById("pythonCode").value;
+
+            try {
+                // 執行 Python 代碼並顯示輸出
+                let output = await pyodide.runPythonAsync(code);
+                document.getElementById("output").innerText = output;
+            } catch (err) {
+                document.getElementById("output").innerText = "錯誤: " + err;
+            }
+        }
+
+        window.addEventListener("load", async () => {
+            await initPyodide();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
+</head>
+<body>
+    <font size="7" color="blue">你好!</font><br>
+    <h2>在這裡輸入 Python 代碼</h2>
+    <textarea id="pythonCode" rows="6" cols="40">print("Hello, world!")</textarea><br><br>
+    <button onclick="runPythonCode()">執行</button>
+
+    <h2>輸出結果:</h2>
+    <pre id="output"></pre>
+</body>
+</html>
